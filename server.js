@@ -1,25 +1,51 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const routes = require("./routes/ToDoRoute");
-const cors = require("cors");
+const express = require('express');
+const mongoose = require('mongoose');
+const Cors = require('cors');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const {
+	getTodos,
+	createTodo,
+	updateTodo,
+	deleteTodo,
+} = require('./controllers/todoController')
+
+
+// App config
 const app = express();
-const port = process.env.PORT || 5000;
-require("dotenv").config();
-const path = require("path");
 
+const port = process.env.PORT || 8000;
+
+const connectionURL= process.env.MONGODB_URI
+
+// Middlewares
+// Convert to Json
 app.use(express.json());
-app.use(cors());
 
+app.use(Cors());
+
+// DB config
 mongoose
-	.connect(process.env.MONGODB_URI)
-	.then(() => console.log("Connected to MongoDB..."))
-	.catch((err) => console.log(err));
-
-app.use(routes);
-
-app.all("*", (req, res) => {
-	res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+.connect(connectionURL)
+.then(() => {
+	app.listen(port, () => console.log(`Running on port: ${port}`))
+})
+.catch((err) => {
+	console.log(err);
 });
-app.listen(port, () => {
-	console.log(`Server is running on port: ${port}`);
-});
+
+// API Endpoints
+
+// Get todos list
+app.get("/todos", getTodos);
+
+// Create a new Todo
+app.put("/todos", createTodo);
+
+// Update a Todo
+app.post("/todos:id", updateTodo);
+
+// Delete a Todo
+app.delete("/todos:id", deleteTodo);
