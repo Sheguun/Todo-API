@@ -1,7 +1,7 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const Cors = require('cors');
-const dotenv = require('dotenv');
+const express = require("express");
+const mongoose = require("mongoose");
+const Cors = require("cors");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
@@ -10,7 +10,7 @@ const {
 	createTodo,
 	updateTodo,
 	deleteTodo,
-} = require('./controllers/todoController')
+} = require('./controllers/todoController');
 
 
 // App config
@@ -18,15 +18,15 @@ const app = express();
 
 const port = process.env.PORT || 8000;
 
-const connectionURL= process.env.MONGODB_URI
+const connectionURL = process.env.MONGO_URI;
 
-// Middlewares
-// Convert to Json
+// // Middlewares
+// // Convert to Json
 app.use(express.json());
 
 app.use(Cors());
 
-// DB config
+// // DB config
 mongoose
 .connect(connectionURL)
 .then(() => {
@@ -42,10 +42,10 @@ mongoose
 app.get("/todos", getTodos);
 
 // Create a new Todo
-app.put("/todos", createTodo);
+app.post("/todos", createTodo);
 
 // Update a Todo
-app.post("/todos:id", updateTodo);
+app.put("/todos/:id", updateTodo);
 
 // Delete a Todo
-app.delete("/todos:id", deleteTodo);
+app.delete("/todos/:id", deleteTodo);
