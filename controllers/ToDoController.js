@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Todos = require("../dbTodos");
+const Todos = require("../models/dbTodos");
 
 // Get Todos list
 const getTodos = async (req, res) => {
